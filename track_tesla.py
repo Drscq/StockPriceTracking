@@ -80,6 +80,6 @@ def main(send_mail=False, send_sms_flag=False):
 
 
 if __name__ == '__main__':
-    send_mail = _env_flag('STOCK_SEND_EMAIL')
+    send_mail = True
     send_sms_flag = _env_flag('STOCK_SEND_SMS')
     main(send_mail, send_sms_flag)
