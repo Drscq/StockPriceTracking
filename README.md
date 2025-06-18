@@ -6,7 +6,6 @@ This repository provides a simple script to check the latest Tesla (TSLA) stock
 price along with the maximum and minimum closing prices over the last five
 years. It can optionally send the update via email.
 
-
 ### Requirements
 
 - Python 3
@@ -40,6 +39,10 @@ workflow file. The `STOCK_SEND_EMAIL` secret should be set to `1`, `true`, or
 `yes`.
 
 
+The stock information is printed to standard output. When using GitHub Actions,
+expand the "Run update" step in the job log to view the message.
+
+
 Alternatively, schedule with `cron`:
 
 ```cron
@@ -49,4 +52,5 @@ Alternatively, schedule with `cron`:
 ### Disclaimer
 
 This script uses Yahoo Finance via `yfinance` and requires internet access.
-Email credentials should be stored securely (for example in environment
+Email credentials should be stored securely (for example in environment variables or GitHub secrets) and never committed to the repository.
+

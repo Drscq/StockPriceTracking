@@ -3,6 +3,7 @@ import yfinance as yf
 import smtplib
 from email.mime.text import MIMEText
 
+
 def _env_flag(name: str) -> bool:
     """Return True if the environment variable is set to a truthy value."""
     val = os.environ.get(name, "").lower()
@@ -15,7 +16,11 @@ def get_stock_data():
     # auto_adjust=False ensures the columns are simple floats with the usual
     # Open/High/Low/Close/Volume structure
     data = yf.download(
-        'TSLA', period='5y', auto_adjust=False, multi_level_index=False
+        'TSLA',
+        period='5y',
+        auto_adjust=False,
+        multi_level_index=False,
+        progress=False,
     )
     if data.empty:
         raise ValueError('No data fetched for TSLA')
@@ -39,6 +44,7 @@ def compose_message(latest_date, latest_close, max_price, min_price):
 
 def send_email(subject, body):
     sender = os.environ.get('STOCK_EMAIL_SENDER')
+
     print(f'Sender: {sender}')
     receiver = os.environ.get('STOCK_EMAIL_RECEIVER')
     password = os.environ.get('STOCK_EMAIL_PASSWORD')
@@ -56,21 +62,18 @@ def send_email(subject, body):
         smtp.send_message(msg)
     return True
 
-def main(send_mail: bool):
-    try:
-        latest_date, latest_close, max_price, min_price = get_stock_data()
-        message = compose_message(latest_date, latest_close, max_price, min_price)
-        print(message)
+def main(send_mail=False):
+    latest_date, latest_close, max_price, min_price = get_stock_data()
+    message = compose_message(latest_date, latest_close, max_price, min_price)
+    if send_mail:
+        sent = send_email('Tesla Stock Price Update', message)
+        if not sent:
+            print(message, flush=True)
+    else:
+        print(message, flush=True)
 
-        if send_mail:
-            subject = f'Tesla Stock Update - {latest_date}'
-            if send_email(subject, message):
-                print('Email sent successfully.')
-            else:
-                print('Failed to send email.')
-    except Exception as e:
-        print(f'Error: {e}')
 
 if __name__ == '__main__':
     send_mail = _env_flag('STOCK_SEND_EMAIL')
     main(send_mail)
+
