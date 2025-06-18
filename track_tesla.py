@@ -39,6 +39,7 @@ def compose_message(latest_date, latest_close, max_price, min_price):
 
 def send_email(subject, body):
     sender = os.environ.get('STOCK_EMAIL_SENDER')
+    print(f'Sender: {sender}')
     receiver = os.environ.get('STOCK_EMAIL_RECEIVER')
     password = os.environ.get('STOCK_EMAIL_PASSWORD')
     if not all([sender, receiver, password]):
@@ -55,6 +56,20 @@ def send_email(subject, body):
         smtp.send_message(msg)
     return True
 
+def main(send_mail: bool):
+    try:
+        latest_date, latest_close, max_price, min_price = get_stock_data()
+        message = compose_message(latest_date, latest_close, max_price, min_price)
+        print(message)
+
+        if send_mail:
+            subject = f'Tesla Stock Update - {latest_date}'
+            if send_email(subject, message):
+                print('Email sent successfully.')
+            else:
+                print('Failed to send email.')
+    except Exception as e:
+        print(f'Error: {e}')
 
 if __name__ == '__main__':
     send_mail = _env_flag('STOCK_SEND_EMAIL')
