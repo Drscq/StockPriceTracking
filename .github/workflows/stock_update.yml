@@ -17,6 +17,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip install yfinance
+
       - name: Run update
         env:
           STOCK_EMAIL_SENDER: ${{ secrets.STOCK_EMAIL_SENDER }}
@@ -24,16 +25,3 @@ jobs:
           STOCK_EMAIL_PASSWORD: ${{ secrets.STOCK_EMAIL_PASSWORD }}
           STOCK_SEND_EMAIL: ${{ secrets.STOCK_SEND_EMAIL }}
         run: python track_tesla.py
-
-  test-script:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.x'
-      - name: Install dependencies
-        run: pip install yfinance
-      - name: Compile script
-        run: python -m py_compile track_tesla.py

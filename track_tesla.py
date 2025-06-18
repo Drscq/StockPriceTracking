@@ -3,7 +3,6 @@ import yfinance as yf
 import smtplib
 from email.mime.text import MIMEText
 
-
 def _env_flag(name: str) -> bool:
     """Return True if the environment variable is set to a truthy value."""
     val = os.environ.get(name, "").lower()
@@ -55,17 +54,6 @@ def send_email(subject, body):
         smtp.login(sender, password)
         smtp.send_message(msg)
     return True
-
-
-def main(send_mail=False):
-    latest_date, latest_close, max_price, min_price = get_stock_data()
-    message = compose_message(latest_date, latest_close, max_price, min_price)
-    if send_mail:
-        sent = send_email('Tesla Stock Price Update', message)
-        if not sent:
-            print(message)
-    else:
-        print(message)
 
 
 if __name__ == '__main__':
