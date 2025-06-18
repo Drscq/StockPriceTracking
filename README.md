@@ -4,13 +4,13 @@
 
 This repository provides a simple script to check the latest Tesla (TSLA) stock
 price along with the maximum and minimum closing prices over the last five
-years.
+years. It can optionally send the update via email.
+
 
 ### Requirements
 
 - Python 3
 - `yfinance` (`pip install yfinance`)
-- `twilio` (`pip install twilio`) if you want SMS notifications
 
 ### Usage
 
@@ -31,24 +31,14 @@ export STOCK_SEND_EMAIL=1  # accepts "1", "true", or "yes"
 python track_tesla.py
 ```
 
-To send the update via SMS using Twilio, set these variables:
-
-```bash
-export TWILIO_ACCOUNT_SID=your_account_sid
-export TWILIO_AUTH_TOKEN=your_auth_token
-export TWILIO_FROM_NUMBER=+1234567890
-export TWILIO_TO_NUMBER=+1234567890
-export STOCK_SEND_SMS=1  # accepts "1", "true", or "yes"
-python track_tesla.py
-```
-
 You can schedule the script daily using `cron` or run it via GitHub Actions.
 
 Create a workflow file at `.github/workflows/stock_update.yml` similar to the
 one in this repo. The workflow installs dependencies and runs the script daily.
-Add your email or Twilio credentials as repository secrets so they are not
-exposed in the workflow file. Boolean secrets such as `STOCK_SEND_EMAIL` or
-`STOCK_SEND_SMS` should be set to `1`, `true`, or `yes`.
+Add your email credentials as repository secrets so they are not exposed in the
+workflow file. The `STOCK_SEND_EMAIL` secret should be set to `1`, `true`, or
+`yes`.
+
 
 Alternatively, schedule with `cron`:
 
@@ -59,5 +49,4 @@ Alternatively, schedule with `cron`:
 ### Disclaimer
 
 This script uses Yahoo Finance via `yfinance` and requires internet access.
-Email and SMS credentials should be stored securely (for example in environment
-variables or GitHub secrets) and never committed to the repository.
+Email credentials should be stored securely (for example in environment

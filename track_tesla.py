@@ -2,8 +2,6 @@ import os
 import yfinance as yf
 import smtplib
 from email.mime.text import MIMEText
-from twilio.rest import Client
-
 
 def _env_flag(name: str) -> bool:
     """Return True if the environment variable is set to a truthy value."""
@@ -44,7 +42,8 @@ def send_email(subject, body):
     receiver = os.environ.get('STOCK_EMAIL_RECEIVER')
     password = os.environ.get('STOCK_EMAIL_PASSWORD')
     if not all([sender, receiver, password]):
-        raise EnvironmentError('Email credentials not fully set')
+        print('Email credentials not fully set; skipping email.')
+        return False
 
     msg = MIMEText(body)
     msg['Subject'] = subject
@@ -54,32 +53,9 @@ def send_email(subject, body):
     with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
         smtp.login(sender, password)
         smtp.send_message(msg)
-
-
-def send_sms(body):
-    account_sid = os.environ.get('TWILIO_ACCOUNT_SID')
-    auth_token = os.environ.get('TWILIO_AUTH_TOKEN')
-    from_number = os.environ.get('TWILIO_FROM_NUMBER')
-    to_number = os.environ.get('TWILIO_TO_NUMBER')
-    if not all([account_sid, auth_token, from_number, to_number]):
-        raise EnvironmentError('Twilio credentials not fully set')
-
-    client = Client(account_sid, auth_token)
-    client.messages.create(body=body, from_=from_number, to=to_number)
-
-
-def main(send_mail=False, send_sms_flag=False):
-    latest_date, latest_close, max_price, min_price = get_stock_data()
-    message = compose_message(latest_date, latest_close, max_price, min_price)
-    if send_mail:
-        send_email('Tesla Stock Price Update', message)
-    if send_sms_flag:
-        send_sms(message)
-    if not send_mail and not send_sms_flag:
-        print(message)
+    return True
 
 
 if __name__ == '__main__':
-    send_mail = True
-    send_sms_flag = _env_flag('STOCK_SEND_SMS')
-    main(send_mail, send_sms_flag)
+    send_mail = _env_flag('STOCK_SEND_EMAIL')
+    main(send_mail)
