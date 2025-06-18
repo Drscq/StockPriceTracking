@@ -17,17 +17,5 @@ jobs:
       - name: Install dependencies
         run: |
           pip install yfinance
+      - name: Run Tesla tracking script
         run: python track_tesla.py
-
-  test-script:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.x'
-      - name: Install dependencies
-        run: pip install yfinance
-      - name: Compile script
-        run: python -m py_compile track_tesla.py
