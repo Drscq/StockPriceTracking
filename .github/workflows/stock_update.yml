@@ -19,3 +19,8 @@ jobs:
           pip install yfinance
       - name: Run Tesla tracking script
         run: python track_tesla.py
+        env:
+          STOCK_SEND_EMAIL: "true"
+          STOCK_EMAIL_SENDER: ${{ secrets.STOCK_EMAIL_SENDER }}
+          STOCK_EMAIL_RECEIVER: ${{ secrets.STOCK_EMAIL_RECEIVER }}
+          STOCK_EMAIL_PASSWORD: ${{ secrets.STOCK_EMAIL_PASSWORD }}
