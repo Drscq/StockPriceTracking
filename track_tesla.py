@@ -44,6 +44,8 @@ def compose_message(latest_date, latest_close, max_price, min_price):
 
 def send_email(subject, body):
     sender = os.environ.get('STOCK_EMAIL_SENDER')
+
+    print(f'Sender: {sender}')
     receiver = os.environ.get('STOCK_EMAIL_RECEIVER')
     password = os.environ.get('STOCK_EMAIL_PASSWORD')
     if not all([sender, receiver, password]):
@@ -60,7 +62,6 @@ def send_email(subject, body):
         smtp.send_message(msg)
     return True
 
-
 def main(send_mail=False):
     latest_date, latest_close, max_price, min_price = get_stock_data()
     message = compose_message(latest_date, latest_close, max_price, min_price)
@@ -75,3 +76,4 @@ def main(send_mail=False):
 if __name__ == '__main__':
     send_mail = _env_flag('STOCK_SEND_EMAIL')
     main(send_mail)
+

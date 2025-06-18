@@ -38,8 +38,10 @@ Add your email credentials as repository secrets so they are not exposed in the
 workflow file. The `STOCK_SEND_EMAIL` secret should be set to `1`, `true`, or
 `yes`.
 
+
 The stock information is printed to standard output. When using GitHub Actions,
 expand the "Run update" step in the job log to view the message.
+
 
 Alternatively, schedule with `cron`:
 
@@ -50,5 +52,5 @@ Alternatively, schedule with `cron`:
 ### Disclaimer
 
 This script uses Yahoo Finance via `yfinance` and requires internet access.
-Email credentials should be stored securely (for example in environment
-variables or GitHub secrets) and never committed to the repository.
+Email credentials should be stored securely (for example in environment variables or GitHub secrets) and never committed to the repository.
+
