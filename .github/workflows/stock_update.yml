@@ -1,0 +1,44 @@
+name: Daily Tesla Update
+
+on:
+  schedule:
+    - cron: '0 9 * * *'
+  workflow_dispatch:
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Install dependencies
+        run: |
+          pip install yfinance twilio
+      - name: Run update
+        env:
+          STOCK_EMAIL_SENDER: ${{ secrets.STOCK_EMAIL_SENDER }}
+          STOCK_EMAIL_RECEIVER: ${{ secrets.STOCK_EMAIL_RECEIVER }}
+          STOCK_EMAIL_PASSWORD: ${{ secrets.STOCK_EMAIL_PASSWORD }}
+          STOCK_SEND_EMAIL: ${{ secrets.STOCK_SEND_EMAIL }}
+          TWILIO_ACCOUNT_SID: ${{ secrets.TWILIO_ACCOUNT_SID }}
+          TWILIO_AUTH_TOKEN: ${{ secrets.TWILIO_AUTH_TOKEN }}
+          TWILIO_FROM_NUMBER: ${{ secrets.TWILIO_FROM_NUMBER }}
+          TWILIO_TO_NUMBER: ${{ secrets.TWILIO_TO_NUMBER }}
+          STOCK_SEND_SMS: ${{ secrets.STOCK_SEND_SMS }}
+        run: python track_tesla.py
+
+  test-script:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Install dependencies
+        run: pip install yfinance twilio
+      - name: Compile script
+        run: python -m py_compile track_tesla.py
