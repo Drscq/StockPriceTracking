@@ -1,9 +1,14 @@
 import os
-from datetime import datetime
 import yfinance as yf
 import smtplib
 from email.mime.text import MIMEText
 from twilio.rest import Client
+
+
+def _env_flag(name: str) -> bool:
+    """Return True if the environment variable is set to a truthy value."""
+    val = os.environ.get(name, "").lower()
+    return val in {"1", "true", "yes"}
 
 # Fetch last 5 years of Tesla (TSLA) data
 # Use period='5y' for last 5 years
@@ -75,6 +80,6 @@ def main(send_mail=False, send_sms_flag=False):
 
 
 if __name__ == '__main__':
-    send_mail = bool(os.environ.get('STOCK_SEND_EMAIL'))
-    send_sms_flag = bool(os.environ.get('STOCK_SEND_SMS'))
+    send_mail = _env_flag('STOCK_SEND_EMAIL')
+    send_sms_flag = _env_flag('STOCK_SEND_SMS')
     main(send_mail, send_sms_flag)
