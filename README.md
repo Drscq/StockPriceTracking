@@ -27,7 +27,7 @@ email sending:
 export STOCK_EMAIL_SENDER=your_email@example.com
 export STOCK_EMAIL_RECEIVER=destination_email@example.com
 export STOCK_EMAIL_PASSWORD=your_email_password
-export STOCK_SEND_EMAIL=1
+export STOCK_SEND_EMAIL=1  # accepts "1", "true", or "yes"
 python track_tesla.py
 ```
 
@@ -38,7 +38,7 @@ export TWILIO_ACCOUNT_SID=your_account_sid
 export TWILIO_AUTH_TOKEN=your_auth_token
 export TWILIO_FROM_NUMBER=+1234567890
 export TWILIO_TO_NUMBER=+1234567890
-export STOCK_SEND_SMS=1
+export STOCK_SEND_SMS=1  # accepts "1", "true", or "yes"
 python track_tesla.py
 ```
 
@@ -47,7 +47,8 @@ You can schedule the script daily using `cron` or run it via GitHub Actions.
 Create a workflow file at `.github/workflows/stock_update.yml` similar to the
 one in this repo. The workflow installs dependencies and runs the script daily.
 Add your email or Twilio credentials as repository secrets so they are not
-exposed in the workflow file.
+exposed in the workflow file. Boolean secrets such as `STOCK_SEND_EMAIL` or
+`STOCK_SEND_SMS` should be set to `1`, `true`, or `yes`.
 
 Alternatively, schedule with `cron`:
 
