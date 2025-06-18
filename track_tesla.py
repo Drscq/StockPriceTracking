@@ -44,12 +44,22 @@ def compose_message(latest_date, latest_close, max_price, min_price):
 
 def send_email(subject, body):
     sender = os.environ.get('STOCK_EMAIL_SENDER')
-
-    print(f'Sender: {sender}')
     receiver = os.environ.get('STOCK_EMAIL_RECEIVER')
     password = os.environ.get('STOCK_EMAIL_PASSWORD')
+    
+    print(f'Sender: {sender}')
+    print(f'Receiver: {receiver}')
+    print(f'Password set: {"Yes" if password else "No"}')
+    
     if not all([sender, receiver, password]):
-        print('Email credentials not fully set; skipping email.')
+        missing = []
+        if not sender:
+            missing.append('STOCK_EMAIL_SENDER')
+        if not receiver:
+            missing.append('STOCK_EMAIL_RECEIVER')
+        if not password:
+            missing.append('STOCK_EMAIL_PASSWORD')
+        print(f'Email credentials not fully set; missing: {", ".join(missing)}. Skipping email.')
         return False
 
     msg = MIMEText(body)
